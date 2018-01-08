@@ -285,7 +285,11 @@ void env_relocate_spec(void)
 	char * uflag = (char *)0x81DFFFF0;
 	if ((uflag[0] == 'e') && (uflag[1] == 'M') && (uflag[2] == 'M') && (uflag[3] == 'C')) {
 		mmc_env_dev = 0;
+        	setenv("bootemmc", "true");
+	} else { 
+        	setenv("bootemmc", "false");
 	}
+
 	ALLOC_CACHE_ALIGN_BUFFER(char, buf, CONFIG_ENV_SIZE);
 	struct mmc *mmc = find_mmc_device(mmc_env_dev);
 	u32 offset;
