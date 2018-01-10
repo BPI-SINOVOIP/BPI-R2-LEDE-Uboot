@@ -285,9 +285,10 @@ void env_relocate_spec(void)
 	char * uflag = (char *)0x81DFFFF0;
 	if ((uflag[0] == 'e') && (uflag[1] == 'M') && (uflag[2] == 'M') && (uflag[3] == 'C')) {
 		mmc_env_dev = 0;
-        	setenv("bootemmc", "true");
+		puts("booting from eMMC\n");
 	} else { 
         	setenv("bootemmc", "false");
+		puts("booting from SD card\n");
 	}
 
 	ALLOC_CACHE_ALIGN_BUFFER(char, buf, CONFIG_ENV_SIZE);
@@ -318,6 +319,12 @@ fini:
 err:
 	if (ret)
 		set_default_env(NULL);
+
+        if ( mmc_env_dev == 0 ) {
+        	setenv("bootemmc", "true");
+        } else {
+        	setenv("bootemmc", "false");
+        }
 #endif
 }
 #endif /* CONFIG_ENV_OFFSET_REDUND */

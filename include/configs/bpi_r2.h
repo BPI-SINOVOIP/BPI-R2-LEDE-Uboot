@@ -197,7 +197,7 @@
  *                                       Boot Menu
  **********************************************************************************************/
 #define CONFIG_BOOTDELAY                    3
-#define CONFIG_BOOTCOMMAND                  "No"
+#define CONFIG_BOOTCOMMAND                  "run getbootdevice; mmc dev ${bootdevice}; mmc read ${kerneladdr} 1000 6000; run configBootargs; bootm ${kerneladdr};"
 
 #define ENV_BOOT_CMD0 \
     "boot0=tftpboot; bootm\0"
@@ -259,6 +259,7 @@
     "chip=MT7623N\0" \
     "service=linux\0" \
     "scriptaddr=0x83000000\0" \
+    "kerneladdr=0x84000000\0" \
     "device=mmc\0" \
     "partition=1:1\0" \
     "kernel=uImage\0" \
@@ -271,10 +272,18 @@
     "bootmenu_delay=30\0" \
     ""
 
+#define ENV_BOOT_GET_DEVICE \
+    "getbootdevice=setenv bootdevice 1; if test ${bootemmc} = true; then setenv bootdevice 0; fi;\0"
+
+#define ENV_BOOT_SET_BOOTARGS \
+    "configBootargs=run getbootdevice; setenv bootargs earlyprintk block2mtd.block2mtd=/dev/mmcblk${bootdevice},65536,RootFs,5 mtdparts=RootFs:256k(mbr)ro,512k(uboot)ro,256k(config)ro,256k(factory)ro,32M(kernel),32M(recovery),1024M(rootfs),2048M(usrdata),-(bmtpool) rootfstype=squashfs,jffs2\0"
+
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	ENV_DEVICE_SETTINGS \
 	ENV_BOOT_CMD        \
-	ENV_BOOT_MENU
+	ENV_BOOT_MENU       \
+	ENV_BOOT_GET_DEVICE \
+        ENV_BOOT_SET_BOOTARGS
 
 
 /**********************************************************************************************
@@ -289,10 +298,11 @@
 #include <config_cmd_default.h>
 
 /* Device tree support */
-#define CONFIG_OF_BOARD_SETUP
+#define CONFIG_OF_LIBFDT	1
+#define CONFIG_OF_BOARD_SETUP   1
 /* ATAGs support for bootm/bootz */
 #define CONFIG_SETUP_MEMORY_TAGS
-#define CONFIG_CMDLINE_TAG
+#define CONFIG_CMDLINE_TAG  1
 #define CONFIG_INITRD_TAG
 
 #undef CONFIG_CMD_FPGA
