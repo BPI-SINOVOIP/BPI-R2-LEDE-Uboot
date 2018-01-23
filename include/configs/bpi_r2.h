@@ -276,7 +276,7 @@
     "getbootdevice=setenv bootdevice 1; if test ${bootemmc} = true; then setenv bootdevice 0; fi;\0"
 
 #define ENV_BOOT_SET_BOOTARGS \
-    "configBootargs=run getbootdevice; setenv bootargs earlyprintk block2mtd.block2mtd=/dev/mmcblk${bootdevice},65536,RootFs,5 mtdparts=RootFs:256k(mbr)ro,512k(uboot)ro,256k(config)ro,256k(factory)ro,32M(kernel),32M(recovery),1024M(rootfs),2048M(usrdata),-(bmtpool) rootfstype=squashfs,jffs2\0"
+    "configBootargs=run getbootdevice; setenv bootargs earlyprintk block2mtd.block2mtd=/dev/mmcblk${bootdevice},65536,RootFs,5 mtdparts=RootFs:512k(mbr)ro,512k(uboot)ro,512k(config)ro,512k(factory)ro,32M(kernel),32M(recovery),1024M(rootfs),2048M(usrdata),-(bmtpool) rootfstype=squashfs,jffs2\0"
 
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	ENV_DEVICE_SETTINGS \
